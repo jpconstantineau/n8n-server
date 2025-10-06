@@ -1,11 +1,11 @@
 version: '3.8'
 services:
   ollama-server:
-    image: ollama/ollama:latest
+    image: /ollama/ollama:latest
     ports:
       - "11434:11434"
     volumes:
-      - ollama:/root/.ollama
+      - /ollama:/root/.ollama
     restart: unless-stopped
     # environment:
     #   - gpus=all
@@ -23,7 +23,7 @@ services:
     container_name: ollama-webui
     restart: unless-stopped
     volumes:
-      - webui:/app/backend/data
+      - /webui:/app/backend/data
     ports:
       - "3010:8080"
     # environment:
