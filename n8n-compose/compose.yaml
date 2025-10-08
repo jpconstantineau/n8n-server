@@ -67,17 +67,8 @@ services:
       - traefik.enable=true
       - traefik.http.routers.llm.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)
       - traefik.http.routers.llm.tls=false
-      - traefik.http.routers.llm.entrypoints=web,websecure
-      - traefik.http.routers.llm.tls.certresolver=mytlschallenge
-      - traefik.http.middlewares.llm.headers.SSLRedirect=true
-      - traefik.http.middlewares.llm.headers.STSSeconds=315360000
-      - traefik.http.middlewares.llm.headers.browserXSSFilter=true
-      - traefik.http.middlewares.llm.headers.contentTypeNosniff=true
-      - traefik.http.middlewares.llm.headers.forceSTSHeader=true
-      - traefik.http.middlewares.llm.headers.SSLHost=${DOMAIN_NAME}
-      - traefik.http.middlewares.llm.headers.STSIncludeSubdomains=true
-      - traefik.http.middlewares.llm.headers.STSPreload=true
-      - traefik.http.routers.llm.middlewares=ollama-webui@docker
+      - traefik.http.routers.llm.entrypoints=web
+
     environment:
       - OLLAMA_API_BASE_URL=http://ollama-server:11434/api
 
