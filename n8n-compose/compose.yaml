@@ -55,6 +55,36 @@ services:
       - n8n_data:/home/node/.n8n
       - ./local-files:/files
 
+  ollama-webui:
+    image: ghcr.io/ollama-webui/ollama-webui:main
+    container_name: ollama-webui
+    restart: unless-stopped
+    volumes:
+      - webui:/app/backend/data
+    ports:
+      - "3010:3010"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.llm.rule=Host(`llm.${DOMAIN_NAME}`)
+      - traefik.http.routers.llm.tls=true
+      - traefik.http.routers.llm.entrypoints=web,websecure
+      - traefik.http.routers.llm.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.llm.headers.SSLRedirect=true
+      - traefik.http.middlewares.llm.headers.STSSeconds=315360000
+      - traefik.http.middlewares.llm.headers.browserXSSFilter=true
+      - traefik.http.middlewares.llm.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.llm.headers.forceSTSHeader=true
+      - traefik.http.middlewares.llm.headers.SSLHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.llm.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.llm.headers.STSPreload=true
+      - traefik.http.routers.llm.middlewares=llm@docker
+    # environment:
+    #   - OLLAMA_API_BASE_URL=http://localhost:11434/api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
 volumes:
   n8n_data:
   traefik_data:
+  webui:
