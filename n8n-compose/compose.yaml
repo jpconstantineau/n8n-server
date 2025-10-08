@@ -98,8 +98,19 @@ services:
             count: 1
             capabilities: [gpu]
 
+  qdrant:
+    image: qdrant/qdrant
+    hostname: qdrant
+    container_name: qdrant
+    restart: unless-stopped
+    ports:
+      - 6333:6333
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
 volumes:
   n8n_data:
   traefik_data:
   webui:
   ollama:
+  qdrant_storage:
