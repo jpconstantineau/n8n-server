@@ -66,20 +66,8 @@ services:
       - "127.0.0.1:8080:8080"
     labels:
       - traefik.enable=true
-      # Service
-      - traefik.http.services.open_webui_service.loadbalancer.server.port=8080
- 
-      # HTTP -> HTTPS
-      - traefik.http.routers.open_webui_http.entrypoints=web
-      - traefik.http.routers.open_webui_http.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
-      - traefik.http.routers.open_webui_http.middlewares=open_webui_redirect
-      - traefik.http.middlewares.open_webui_redirect.redirectscheme.scheme=https
-
-      # HTTPS -> Service
-      - traefik.http.routers.open_webui_https.entrypoints=websecure
-      - traefik.http.routers.open_webui_https.rule=ost(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
-      - traefik.http.routers.open_webui_https.tls.certresolver=default 
-      - traefik.http.routers.open_webui_https.service=open_webui_service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
     environment:
       - OLLAMA_API_BASE_URL=http://ollama-server:11434/api
