@@ -77,7 +77,7 @@ services:
       - traefik.http.middlewares.llm.headers.SSLHost=${DOMAIN_NAME}
       - traefik.http.middlewares.llm.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.llm.headers.STSPreload=true
-      - traefik.http.routers.llm.middlewares=llm@docker
+      - traefik.http.routers.llm.middlewares=ollama-webui@docker
     # environment:
     #   - OLLAMA_API_BASE_URL=http://localhost:11434/api
     extra_hosts:
