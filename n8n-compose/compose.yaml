@@ -62,7 +62,7 @@ services:
     volumes:
       - webui:/app/backend/data
     ports:
-      - "3010:3010"
+      - "127.0.0.1:3010:3010"
     labels:
       - traefik.enable=true
       - traefik.http.routers.llm.rule=Host(`llm.${DOMAIN_NAME}`)
@@ -78,13 +78,28 @@ services:
       - traefik.http.middlewares.llm.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.llm.headers.STSPreload=true
       - traefik.http.routers.llm.middlewares=ollama-webui@docker
-    # environment:
-    #   - OLLAMA_API_BASE_URL=http://localhost:11434/api
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama-server:11434/api
 
+  ollama-server:
+    image: ollama/ollama:latest
+    ports:
+      - "127.0.0.1:11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+    # environment:
+    #   - gpus=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
 
 volumes:
   n8n_data:
   traefik_data:
   webui:
+  ollama:
