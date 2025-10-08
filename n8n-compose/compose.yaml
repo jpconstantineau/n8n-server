@@ -65,7 +65,7 @@ services:
       - "127.0.0.1:3010:3010"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.llm.rule=Host(`llm.${DOMAIN_NAME}`)
+      - traefik.http.routers.llm.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)
       - traefik.http.routers.llm.tls=true
       - traefik.http.routers.llm.entrypoints=web,websecure
       - traefik.http.routers.llm.tls.certresolver=mytlschallenge
