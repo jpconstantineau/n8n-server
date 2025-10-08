@@ -65,9 +65,9 @@ services:
       - "127.0.0.1:8080:8080"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.llm.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)
+      - traefik.http.routers.llm.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
       - traefik.http.routers.llm.tls=false
-      - traefik.http.routers.llm.entrypoints=web
+      - traefik.http.routers.llm.entrypoints=websecure
 
     environment:
       - OLLAMA_API_BASE_URL=http://ollama-server:11434/api
