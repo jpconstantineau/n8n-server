@@ -59,18 +59,31 @@ services:
     image: ghcr.io/ollama-webui/ollama-webui:main
     container_name: ollama-webui
     restart: unless-stopped
+    stop_grace_period: 30s
     volumes:
       - webui:/app/backend/data
     ports:
       - "127.0.0.1:8080:8080"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.llm.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
-      - traefik.http.routers.llm.tls=false
-      - traefik.http.routers.llm.entrypoints=websecure
+      # Service
+      - traefik.http.services.open_webui_service.loadbalancer.server.port=8080
+ 
+      # HTTP -> HTTPS
+      - traefik.http.routers.open_webui_http.entrypoints=web
+      - traefik.http.routers.open_webui_http.rule=Host(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
+      - traefik.http.routers.open_webui_http.middlewares=open_webui_redirect
+      - traefik.http.middlewares.open_webui_redirect.redirectscheme.scheme=https
 
+      # HTTPS -> Service
+      - traefik.http.routers.open_webui_https.entrypoints=websecure
+      - traefik.http.routers.open_webui_https.rule=ost(`${SUBDOMAIN1}.${DOMAIN_NAME}`)&& PathPrefix(`/`)
+      - traefik.http.routers.open_webui_https.tls.certresolver=default 
+      - traefik.http.routers.open_webui_https.service=open_webui_service
+  
     environment:
       - OLLAMA_API_BASE_URL=http://ollama-server:11434/api
+      - TZ=America/Regina
 
   ollama-server:
     image: ollama/ollama:latest
