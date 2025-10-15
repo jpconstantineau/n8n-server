@@ -111,6 +111,11 @@ services:
       - 6333:6333
     volumes:
       - qdrant_storage:/qdrant/storage
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.qdrant.rule=Host(`qdrant.${DOMAIN_NAME}`)
+      - traefik.http.routers.qdrant.entrypoints=web
+      - traefik.http.services.qdrant-service.loadbalancer.server.port=6333  
 
 volumes:
   n8n_data:
