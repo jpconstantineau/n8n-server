@@ -72,7 +72,7 @@ services:
     volumes:
       - webui:/app/backend/data
     ports:
-      - "127.0.0.1:8081:8080"
+      - "0.0.0.0:8081:8080"
     labels:
       - traefik.enable=true
       - traefik.http.routers.ollama-webui.rule=Host(`llm.${DOMAIN_NAME}`)
