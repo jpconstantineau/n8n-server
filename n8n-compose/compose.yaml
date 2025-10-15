@@ -76,7 +76,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.ollama-webui.rule=Host(`llm.${DOMAIN_NAME}`)
-      - traefik.http.routers.ollama-webui.entrypoints=web
+      - traefik.http.routers.ollama-webui.entrypoints=web,websecure
       - traefik.http.routers.ollama-webui.tls=true
       - traefik.http.services.ollama-webui-service.loadbalancer.server.port=8080
       
@@ -115,7 +115,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.qdrant.rule=Host(`qdrant.${DOMAIN_NAME}`)
-      - traefik.http.routers.qdrant.entrypoints=web
+      - traefik.http.routers.qdrant.entrypoints=web,websecure
       - traefik.http.routers.qdrant.tls=true
       - traefik.http.services.qdrant-service.loadbalancer.server.port=6333  
 
