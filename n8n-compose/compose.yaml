@@ -4,6 +4,7 @@ services:
     restart: always
     command:
       - "--api.insecure=true"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -16,9 +17,17 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     volumes:
       - traefik_data:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.jpconstantineau.com`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      # Add the following label
+      - "traefik.http.routers.dashboard.tls=true"  
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -67,7 +76,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.ollama-webui.rule=Host(`llm.${DOMAIN_NAME}`)
+      - traefik.http.routers.ollama-webui.entrypoints=web,websecure
       - traefik.http.services.ollama-webui-service.loadbalancer.server.port=8080
+      
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
