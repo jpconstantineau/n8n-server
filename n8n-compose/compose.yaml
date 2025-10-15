@@ -66,6 +66,8 @@ services:
       - "127.0.0.1:8080:8080"
     labels:
       - traefik.enable=true
+      - traefik.http.routers.ollama-webui.rule=Host(`llm.${DOMAIN_NAME}`)
+      - traefik.http.services.ollama-webui-service.loadbalancer.server.port=8080
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
